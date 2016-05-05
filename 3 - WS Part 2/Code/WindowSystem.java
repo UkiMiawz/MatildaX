@@ -1,69 +1,66 @@
 import de.rwth.hci.Graphics.GraphicsEventSystem;
-import java.util.List;
+
+import java.awt.*;
 import java.util.ArrayList;
-import java.awt.Color;
-import java.awt.geom.Line2D;
+import java.util.List;
 
 public class WindowSystem extends GraphicsEventSystem{
 
     //window system width and height
-    private int desktopWidth;
-    private int desktopHeight;
+    private int windowWidth;
+    private int windowHeight;
     //list of Windows in current window system
     private List<SimpleWindow> simpleWindows;
+    public List<SimpleWindow> getListWindows(){return simpleWindows;}
 
-    //getter for list of simple windows
-    public List<SimpleWindow> getSimpleWindows(){ return simpleWindows; }
-
-    //color theme
-    private Color windowColor = Color.WHITE;
-    private Color lineColor = Color.BLACK;
-    private Color backgroundColor = Color.CYAN;
-    private Color titleBarColor = Color.BLACK;
-
-    //setter for colors
-    public void setWindowColor(Color value){ windowColor = value; }
-    public void setLineColor(Color value){ lineColor = value; }
-    public void setTitleBarColor(Color value){ titleBarColor = value; }
+    //background color
+    private final Color backgroundColor = Color.CYAN;
 
     /*
      * Constructor
      */
     public WindowSystem(int width, int height){
-
         //save window width and height
         super(width, height);
         super.setBackground(backgroundColor);
-        desktopWidth = width;
-        desktopHeight = height;
+        windowWidth = width;
+        windowHeight = height;
 
         //instantiate new list
         simpleWindows = new ArrayList<SimpleWindow>();
     }
 
-    /*
-    * Function for turning vector into coordinates
-    */
-    private int convertX (float coord) { return (int) (desktopWidth * coord); }
-    private int convertY (float coord) { return (int) (desktopHeight * coord); }
+    //coordinate converter
+    public int setX(float x){ return (int) Math.round(x * windowWidth); }
+    public int setY(float y){ return (int) Math.round(y * windowHeight); }
 
     /*
      * Add new window to simple windows
      */
     public void addNewWindow(float startX, float startY, int width, int height, String title){
 
-        System.out.println("Draw rect for new window with startx: " + startX + " starty: " + startY + 
+        System.out.println("Add new window with properties vector: " + startX + " starty: " + startY + 
                 " width: " + width + " height " + height);
 
         //calculate in coordinates
-        int intStartX = convertX(startX);
-        int intStartY = convertY(startY);
+        int intStartX = setX(startX);
+        int intStartY = setY(startY);
 
-        System.out.println("Add new window with startx: " + intStartX + " starty: " + intStartY + 
+        System.out.println("Add new window with coordinates startx: " + intStartX + " starty: " + intStartY + 
                 " width: " + width + " height " + height);
 
         simpleWindows.add(new SimpleWindow(intStartX, intStartY, width,  height, title));
         System.out.println("Windows list count now " + simpleWindows.size());
+
+        //redraw on adding new window
+        requestRepaint(intStartX, intStartY, width, height);
+    }
+
+    /*
+    * Redraw a rectangle area of the desktop
+    */
+    public void requestRepaint(int startX, int startY, int width, int height){
+        super.requestRepaint(new Rectangle(startX, startY, width, height));
     }
 
     /*
@@ -74,16 +71,10 @@ public class WindowSystem extends GraphicsEventSystem{
     @Override
     protected void handlePaint(){
 
-        try {
-            Thread.sleep(500);                 //1000 milliseconds is one second.
-        } catch(InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
+        //copy list to avoid iterating through list that being updated
+        List<SimpleWindow> tempSimpleWindows = new ArrayList<SimpleWindow>(simpleWindows);
 
-        System.out.println("Handle paint with list count " + simpleWindows.size());
-
-        //draw all windows in simple windows buffer
-        for(SimpleWindow t:simpleWindows) {
+        for(SimpleWindow t:tempSimpleWindows) {
 
             int leftTopX = t.getLeftTopX();
             int leftTopY = t.getLeftTopY();
@@ -91,14 +82,12 @@ public class WindowSystem extends GraphicsEventSystem{
             int rightBottomY = t.getRightBottomY();
 
             System.out.println("drawing window rectangle");
-            super.setColor(windowColor);
+            super.setColor(t.getColor());
             super.fillRect(leftTopX , leftTopY, rightBottomX, rightBottomY);
-            super.setColor(lineColor);
-            super.drawRect(leftTopX , leftTopY, rightBottomX, rightBottomY);
 
             //draw rectangle components
             for(RectangleComponent rectangleComponent:t.getRectangleComponents()){
-                System.out.println("drawing rectangle components");
+                System.out.println("drawing rectangle components of window " + t.getTitle());
                 super.setColor(rectangleComponent.getColor());
                 super.fillRect(rectangleComponent.getX(), rectangleComponent.getY(), 
                     rectangleComponent.getX() + rectangleComponent.getWidth(), 
@@ -108,7 +97,7 @@ public class WindowSystem extends GraphicsEventSystem{
             //draw string components
             for(StringComponent stringComponent:t.getStringComponents()){
                 System.out.println("drawing string components");
-                super.setColor(titleBarColor);
+                super.setColor(stringComponent.getColor());
                 super.drawString(stringComponent.getString(), stringComponent.getX(), stringComponent.getY());
             }
         }

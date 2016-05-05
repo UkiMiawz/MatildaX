@@ -1,60 +1,72 @@
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.geom.Line2D;
-import java.awt.Color;
 
-public class WindowManager {
+public class WindowManager  {
 
-	private WindowSystem windowSystem;
+    private List<SimpleWindow> listWindows;
+    private WindowSystem windowSystem;
 
-	private final Color windowColor = Color.LIGHT_GRAY;
-    private final Color lineColor = Color.BLUE;
+    private int titleBarLeftX;
+    private int titleBarLeftY;
+    private int titleBarRightX;
+    private int titleBarRightY;
+
     private final Color headerSquareColor = Color.BLUE;
-    private final Color fontHeaderColor = Color.WHITE;
+    private final Color windowColor = Color.LIGHT_GRAY;
+    private final Color titleBarColor = Color.WHITE;
+    private final Color exitButtonColor = Color.RED;
 
     private final int titleBarHeight = 20;
-    private final int titleTextMarginX = 5;
+    private final int margin = 5;
     private final int titleTextMarginY = 15;
 
-    private List<SimpleWindow> simpleWindows;
+    private final int utilityButtonHeight = titleBarHeight - 2*margin;
+    private final int utilityButtonWidth = 15;
 
-	public WindowManager(WindowSystem windowSystem){
-		System.out.println("Window Manager constructor");
-		this.windowSystem = windowSystem;
-		this.simpleWindows = windowSystem.getSimpleWindows();
-		setThemeColors();
-		addHeaderToWindows();
-	}
+    private final String closeButtonText = "x";
 
-	//Set color theme in window system
-	private void setThemeColors(){
-		System.out.println("Set background color for window system");
-		windowSystem.setWindowColor(windowColor);
-		windowSystem.setLineColor(lineColor);
-		windowSystem.setTitleBarColor(fontHeaderColor);
-	}
+    public WindowManager(WindowSystem windowSystem) {
+        this.windowSystem = windowSystem;
+        listWindows = windowSystem.getListWindows();
+        
+        for (SimpleWindow t:listWindows) {
 
-	//Add header
-	private void addHeaderToWindows(){
+            t.setColor(windowColor);
 
-		//iterate through simpleWindows
-		for (SimpleWindow t:simpleWindows) {
-			
-			//add header bar
-			System.out.println("Adding header bar to window " + t.getId());
-			int titleBarStartX = t.getLeftTopX();
-			int titleBarStartY = t.getLeftTopY() - titleBarHeight;
-			int titleBarWidth = t.getWidth() + 1;
+            //add header bar
+            System.out.println("Adding header bar to window " + t.getTitle());
+            System.out.println("Window properties " + t.getLeftTopX() + " " + t.getLeftTopY() + " " 
+                + t.getWidth() + " " + t.getHeight());
 
-			System.out.println("Title bar position now " + titleBarStartX + " " + titleBarStartY);
-			RectangleComponent titleBar = new RectangleComponent(titleBarStartX, titleBarStartY, titleBarWidth, 
-				titleBarHeight, headerSquareColor);
-			t.addNewComponent(titleBar);
+            int titleBarLeftX = t.getLeftTopX();
+            int titleBarLeftY = t.getLeftTopY() - titleBarHeight;
+            int titleBarWidth = t.getWidth();
 
-			//add string title to header
-			StringComponent titleString = new StringComponent(t.getTitle(), titleBarStartX + titleTextMarginX, titleBarStartY + titleTextMarginY);
-			t.addNewComponent(titleString);
-		}
-	}
+            System.out.println("Title bar position now " + titleBarLeftX + " " + titleBarLeftY);
+            RectangleComponent titleBar = new RectangleComponent(titleBarLeftX, titleBarLeftY, titleBarWidth, 
+                titleBarHeight, headerSquareColor);
+            t.addNewComponent(titleBar);
 
+            //add string title to header
+            StringComponent titleString = new StringComponent(t.getTitle(), titleBarLeftX + margin, 
+                titleBarLeftY + titleTextMarginY, titleBarColor);
+            t.addNewComponent(titleString);
+
+            //add close button
+            int closeButtonStartX = titleBarLeftX + titleBarWidth - margin - utilityButtonWidth;
+            int closeButtonStartY = titleBarLeftY + margin;
+            RectangleComponent closeButton = new RectangleComponent(closeButtonStartX, closeButtonStartY, utilityButtonWidth, 
+                utilityButtonHeight, exitButtonColor);
+            t.addNewComponent(closeButton);
+
+            //add close button icon
+            StringComponent closeButtonString = new StringComponent(closeButtonText, closeButtonStartX + margin, 
+                closeButtonStartY + margin + 3, titleBarColor);
+            t.addNewComponent(closeButtonString);
+
+            windowSystem.requestRepaint(titleBarLeftX, titleBarLeftY, t.getWidth(), t.getHeight() + titleBarHeight);
+        }
+
+    }
 }
