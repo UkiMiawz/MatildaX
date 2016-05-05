@@ -1,7 +1,9 @@
 import de.rwth.hci.Graphics.GraphicsEventSystem;
 import java.util.List;
 import java.util.ArrayList;
-import java.awt.*;
+import java.awt.Rectangle;
+import java.awt.Color;
+import java.awt.geom.Line2D;
 
 public class WindowSystem extends GraphicsEventSystem{
 
@@ -11,6 +13,22 @@ public class WindowSystem extends GraphicsEventSystem{
     //list of Windows in current window system
     private List<SimpleWindow> simpleWindows;
 
+    //getter for list of simple windows
+    public List<SimpleWindow> getSimpleWindows(){ return simpleWindows; }
+
+    //color theme
+    private Color windowColor = Color.WHITE;
+    private Color lineColor = Color.BLACK;
+    private Color squareColor = Color.RED;
+    private Color backgroundColor = Color.CYAN;
+    private Color titleBarColor = Color.BLACK;
+
+    //setter for colors
+    public void setWindowColor(Color value){ windowColor = value; }
+    public void setLineColor(Color value){ lineColor = value; }
+    public void setSquareColor(Color value){ squareColor = value; }
+    public void setTitleBarColor(Color value){ titleBarColor = value; }
+
     /*
      * Constructor
      */
@@ -18,7 +36,7 @@ public class WindowSystem extends GraphicsEventSystem{
 
         //save window width and height
         super(width, height);
-        super.setBackground(Color.CYAN);
+        super.setBackground(backgroundColor);
         desktopWidth = width;
         desktopHeight = height;
 
@@ -35,7 +53,7 @@ public class WindowSystem extends GraphicsEventSystem{
     /*
      * Add new window to simple windows
      */
-    public void addNewWindow(float startX, float startY, int width, int height){
+    public void addNewWindow(float startX, float startY, int width, int height, String title){
 
         System.out.println("Draw rect for new window with startx: " + startX + " starty: " + startY + 
                 " width: " + width + " height " + height);
@@ -47,7 +65,7 @@ public class WindowSystem extends GraphicsEventSystem{
         System.out.println("Add new window with startx: " + intStartX + " starty: " + intStartY + 
                 " width: " + width + " height " + height);
 
-        simpleWindows.add(new SimpleWindow(intStartX, intStartY, width,  height));
+        simpleWindows.add(new SimpleWindow(intStartX, intStartY, width,  height, title));
         System.out.println("Windows list count now " + simpleWindows.size());
     }
 
@@ -68,7 +86,7 @@ public class WindowSystem extends GraphicsEventSystem{
         System.out.println("Handle paint with list count " + simpleWindows.size());
 
         //draw all windows in simple windows buffer
-        for (SimpleWindow t:simpleWindows) {
+        for(SimpleWindow t:simpleWindows) {
 
             int leftTopX = t.getLeftTopX();
             int leftTopY = t.getLeftTopY();
@@ -76,10 +94,17 @@ public class WindowSystem extends GraphicsEventSystem{
             int rightBottomY = t.getRightBottomY();
 
             System.out.println("drawing window rectangle");
-            super.setColor(Color.LIGHT_GRAY);
+            super.setColor(windowColor);
             super.fillRect(leftTopX , leftTopY, rightBottomX, rightBottomY);
-            super.setColor(Color.BLUE);
+            super.setColor(lineColor);
             super.drawRect(leftTopX , leftTopY, rightBottomX, rightBottomY);
+
+            //draw rectangle components
+            for(Rectangle rect:t.getRectangleComponents()){
+                System.out.println("drawing rectangle components");
+                super.setColor(squareColor);
+                super.fillRect(rect.getX(), rect.getY(), rect.getX() + rect.getWidth(), rect.getY() + rect.getHeight());
+            }
         }
     }
 }
