@@ -18,6 +18,7 @@ public class WindowSystem extends GraphicsEventSystem{
 
         //save window width and height
         super(width, height);
+        super.setBackground(Color.CYAN);
         desktopWidth = width;
         desktopHeight = height;
 
@@ -77,7 +78,7 @@ public class WindowSystem extends GraphicsEventSystem{
             System.out.println("drawing window rectangle");
             super.setColor(Color.LIGHT_GRAY);
             super.fillRect(leftTopX , leftTopY, rightBottomX, rightBottomY);
-            super.setColor(Color.RED);
+            super.setColor(Color.BLUE);
             super.drawRect(leftTopX , leftTopY, rightBottomX, rightBottomY);
         }
     }
