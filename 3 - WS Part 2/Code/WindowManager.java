@@ -1,4 +1,3 @@
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.geom.Line2D;
@@ -7,12 +6,15 @@ import java.awt.Color;
 public class WindowManager {
 
 	private WindowSystem windowSystem;
+
 	private final Color windowColor = Color.LIGHT_GRAY;
     private final Color lineColor = Color.BLUE;
-    private final Color squareColor = Color.BLUE;
+    private final Color headerSquareColor = Color.BLUE;
     private final Color fontHeaderColor = Color.WHITE;
 
     private final int titleBarHeight = 20;
+    private final int titleTextMarginX = 5;
+    private final int titleTextMarginY = 15;
 
     private List<SimpleWindow> simpleWindows;
 
@@ -29,19 +31,29 @@ public class WindowManager {
 		System.out.println("Set background color for window system");
 		windowSystem.setWindowColor(windowColor);
 		windowSystem.setLineColor(lineColor);
-		windowSystem.setSquareColor(squareColor);
+		windowSystem.setTitleBarColor(fontHeaderColor);
 	}
 
 	//Add header
 	private void addHeaderToWindows(){
+
 		//iterate through simpleWindows
 		for (SimpleWindow t:simpleWindows) {
-			System.out.println("Adding header to window " + t.getId());
+			
+			//add header bar
+			System.out.println("Adding header bar to window " + t.getId());
 			int titleBarStartX = t.getLeftTopX();
 			int titleBarStartY = t.getLeftTopY() - titleBarHeight;
 			int titleBarWidth = t.getWidth() + 1;
-			Rectangle titleBar = new Rectangle(titleBarStartX, titleBarStartY, titleBarWidth, titleBarHeight);
+
+			System.out.println("Title bar position now " + titleBarStartX + " " + titleBarStartY);
+			RectangleComponent titleBar = new RectangleComponent(titleBarStartX, titleBarStartY, titleBarWidth, 
+				titleBarHeight, headerSquareColor);
 			t.addNewComponent(titleBar);
+
+			//add string title to header
+			StringComponent titleString = new StringComponent(t.getTitle(), titleBarStartX + titleTextMarginX, titleBarStartY + titleTextMarginY);
+			t.addNewComponent(titleString);
 		}
 	}
 

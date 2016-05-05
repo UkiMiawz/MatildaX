@@ -1,7 +1,6 @@
 import de.rwth.hci.Graphics.GraphicsEventSystem;
 import java.util.List;
 import java.util.ArrayList;
-import java.awt.Rectangle;
 import java.awt.Color;
 import java.awt.geom.Line2D;
 
@@ -19,14 +18,12 @@ public class WindowSystem extends GraphicsEventSystem{
     //color theme
     private Color windowColor = Color.WHITE;
     private Color lineColor = Color.BLACK;
-    private Color squareColor = Color.RED;
     private Color backgroundColor = Color.CYAN;
     private Color titleBarColor = Color.BLACK;
 
     //setter for colors
     public void setWindowColor(Color value){ windowColor = value; }
     public void setLineColor(Color value){ lineColor = value; }
-    public void setSquareColor(Color value){ squareColor = value; }
     public void setTitleBarColor(Color value){ titleBarColor = value; }
 
     /*
@@ -100,10 +97,19 @@ public class WindowSystem extends GraphicsEventSystem{
             super.drawRect(leftTopX , leftTopY, rightBottomX, rightBottomY);
 
             //draw rectangle components
-            for(Rectangle rect:t.getRectangleComponents()){
+            for(RectangleComponent rectangleComponent:t.getRectangleComponents()){
                 System.out.println("drawing rectangle components");
-                super.setColor(squareColor);
-                super.fillRect(rect.getX(), rect.getY(), rect.getX() + rect.getWidth(), rect.getY() + rect.getHeight());
+                super.setColor(rectangleComponent.getColor());
+                super.fillRect(rectangleComponent.getX(), rectangleComponent.getY(), 
+                    rectangleComponent.getX() + rectangleComponent.getWidth(), 
+                    rectangleComponent.getY() + rectangleComponent.getHeight());
+            }
+
+            //draw string components
+            for(StringComponent stringComponent:t.getStringComponents()){
+                System.out.println("drawing string components");
+                super.setColor(titleBarColor);
+                super.drawString(stringComponent.getString(), stringComponent.getX(), stringComponent.getY());
             }
         }
     }

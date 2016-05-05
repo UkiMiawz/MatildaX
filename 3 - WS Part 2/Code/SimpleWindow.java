@@ -16,8 +16,9 @@ public class SimpleWindow{
 
     private UUID id;
 
-    private List<Rectangle> rectangleComponents;
+    private List<RectangleComponent> rectangleComponents;
     private List<Line2D> lineComponents;
+    private List<StringComponent> stringComponents;
 
     private String title;
 
@@ -33,8 +34,9 @@ public class SimpleWindow{
         this.id = UUID.randomUUID();
 
         //instantiate new list for rectangle and line
-        rectangleComponents = new ArrayList<Rectangle>();
+        rectangleComponents = new ArrayList<RectangleComponent>();
         lineComponents = new ArrayList<Line2D>();
+        stringComponents = new ArrayList<StringComponent>();
     }
 
     //getter
@@ -45,6 +47,7 @@ public class SimpleWindow{
     public int getRightBottomY(){ return leftTopY + height; }
     public int getHeight(){ return height; }
     public int getWidth(){ return width; }
+    public String getTitle(){ return title; }
 
     //setter
     public void setIndex(int value){ indexValue = value; }
@@ -56,8 +59,10 @@ public class SimpleWindow{
     public UUID getId(){return id;}
 
     //setter getter for simple window components
-    public void addNewComponent(Rectangle newComponent){ rectangleComponents.add(newComponent); }
+    public void addNewComponent(RectangleComponent newComponent){ rectangleComponents.add(newComponent); }
     public void addNewComponent(Line2D newComponent){ lineComponents.add(newComponent); }
-    public List<Rectangle> getRectangleComponents(){ return rectangleComponents; }
+    public void addNewComponent(StringComponent newComponent){ stringComponents.add(newComponent); }
+    public List<RectangleComponent> getRectangleComponents(){ return rectangleComponents; }
     public List<Line2D> getLineComponents(){ return lineComponents; }
+    public List<StringComponent> getStringComponents(){ return stringComponents; }
 }
