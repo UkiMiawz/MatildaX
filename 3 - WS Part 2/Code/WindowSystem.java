@@ -1,8 +1,7 @@
 import de.rwth.hci.Graphics.GraphicsEventSystem;
-
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
+import java.awt.*;
 
 public class WindowSystem extends GraphicsEventSystem{
 
@@ -10,29 +9,47 @@ public class WindowSystem extends GraphicsEventSystem{
     private int desktopWidth;
     private int desktopHeight;
     //list of Windows in current window system
-    private static List<SimpleWindow> simpleWindows;
+    private List<SimpleWindow> simpleWindows;
 
     /*
      * Constructor
      */
     public WindowSystem(int width, int height){
+
         //save window width and height
         super(width, height);
         desktopWidth = width;
         desktopHeight = height;
+
         //instantiate new list
         simpleWindows = new ArrayList<SimpleWindow>();
     }
 
+    /*
+    * Function for turning vector into coordinates
+    */
     private int convertX (float coord) { return (int) (desktopWidth * coord); }
     private int convertY (float coord) { return (int) (desktopHeight * coord); }
 
     /*
-     * Add new simple window to window system
+     * Add new window to simple windows
      */
-    public static void addNewWindow(int leftTopX ,int leftTopY,int rightBottomX, int rightBottomY){
-        simpleWindows.add(new SimpleWindow(leftTopX ,leftTopY, rightBottomX,  rightBottomY));
+    public void addNewWindow(float startX, float startY, int width, int height){
+
+        System.out.println("Draw rect for new window with startx: " + startX + " starty: " + startY + 
+                " width: " + width + " height " + height);
+
+        //calculate in coordinates
+        int intStartX = convertX(startX);
+        int intStartY = convertY(startY);
+
+        System.out.println("Add new window with startx: " + intStartX + " starty: " + intStartY + 
+                " width: " + width + " height " + height);
+
+        simpleWindows.add(new SimpleWindow(intStartX, intStartY, width,  height));
+        System.out.println("Windows list count now " + simpleWindows.size());
     }
+
     /*
      * (non-Javadoc)
      * override handle paint in parent
@@ -40,6 +57,14 @@ public class WindowSystem extends GraphicsEventSystem{
      */
     @Override
     protected void handlePaint(){
+
+        try {
+            Thread.sleep(500);                 //1000 milliseconds is one second.
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+
+        System.out.println("Handle paint with list count " + simpleWindows.size());
 
         //draw all windows in simple windows buffer
         for (SimpleWindow t:simpleWindows) {
@@ -50,11 +75,10 @@ public class WindowSystem extends GraphicsEventSystem{
             int rightBottomY = t.getRightBottomY();
 
             System.out.println("drawing window rectangle");
-            System.out.println(t.getID());
-            super.drawRect(leftTopX , leftTopY, rightBottomX, rightBottomY);
-            System.out.println("filling window rectangle");
-            super.setColor(Color.CYAN);
+            super.setColor(Color.LIGHT_GRAY);
             super.fillRect(leftTopX , leftTopY, rightBottomX, rightBottomY);
+            super.setColor(Color.RED);
+            super.drawRect(leftTopX , leftTopY, rightBottomX, rightBottomY);
         }
     }
 }
