@@ -53,7 +53,7 @@ public class WindowSystem extends GraphicsEventSystem{
         System.out.println("Windows list count now " + simpleWindows.size());
 
         //redraw on adding new window
-        requestRepaint(intStartX, intStartY, width, height);
+        requestRepaint(intStartX-1, intStartY-1, width+2, height+2);
     }
 
     /*
@@ -84,14 +84,22 @@ public class WindowSystem extends GraphicsEventSystem{
             System.out.println("drawing window rectangle");
             super.setColor(t.getColor());
             super.fillRect(leftTopX , leftTopY, rightBottomX, rightBottomY);
+            //draw border
+            super.setColor(t.getBorderColor());
+            super.drawRect(leftTopX-1, leftTopY-1, rightBottomX, rightBottomY);
 
             //draw rectangle components
             for(RectangleComponent rectangleComponent:t.getRectangleComponents()){
                 System.out.println("drawing rectangle components of window " + t.getTitle());
                 super.setColor(rectangleComponent.getColor());
-                super.fillRect(rectangleComponent.getX(), rectangleComponent.getY(), 
-                    rectangleComponent.getX() + rectangleComponent.getWidth(), 
-                    rectangleComponent.getY() + rectangleComponent.getHeight());
+                if (rectangleComponent.isTransparent())
+                    super.drawRect(rectangleComponent.getX(), rectangleComponent.getY(), 
+                        rectangleComponent.getX() + rectangleComponent.getWidth(), 
+                        rectangleComponent.getY() + rectangleComponent.getHeight());
+                else 
+                    super.fillRect(rectangleComponent.getX(), rectangleComponent.getY(), 
+                        rectangleComponent.getX() + rectangleComponent.getWidth(), 
+                        rectangleComponent.getY() + rectangleComponent.getHeight());
             }
 
             //draw string components
