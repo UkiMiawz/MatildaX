@@ -12,6 +12,7 @@ public class WindowSystem extends GraphicsEventSystem{
     //list of Windows in current window system
     private List<SimpleWindow> simpleWindows;
     public List<SimpleWindow> getListWindows(){return simpleWindows;}
+    private static WindowManager windowManager;
 
     //background color
     private final Color backgroundColor = Color.CYAN;
@@ -28,6 +29,7 @@ public class WindowSystem extends GraphicsEventSystem{
 
         //instantiate new list
         simpleWindows = new ArrayList<SimpleWindow>();
+        windowManager = new WindowManager(this);
     }
 
     //coordinate converter
@@ -49,11 +51,18 @@ public class WindowSystem extends GraphicsEventSystem{
         System.out.println("Add new window with coordinates startx: " + intStartX + " starty: " + intStartY + 
                 " width: " + width + " height " + height);
 
-        simpleWindows.add(new SimpleWindow(intStartX, intStartY, width,  height, title));
+        SimpleWindow newWindow = new SimpleWindow(intStartX, intStartY, width,  height, title);
+
+        simpleWindows.add(newWindow);
         System.out.println("Windows list count now " + simpleWindows.size());
 
         //redraw on adding new window
         requestRepaint(intStartX-1, intStartY-1, width+2, height+2);
+
+        //call window manager
+        if(windowManager != null){
+            windowManager.redrawWindow(newWindow);
+        }
     }
 
     /*
@@ -109,5 +118,11 @@ public class WindowSystem extends GraphicsEventSystem{
                 super.drawString(stringComponent.getString(), stringComponent.getX(), stringComponent.getY());
             }
         }
+    }
+
+    @Override
+    public void handleMouseClicked(int x, int y){
+        System.out.println("Mouse clicked with x " + x + " and y " + y);
+        windowManager.handleMouseClicked(x, y);
     }
 }

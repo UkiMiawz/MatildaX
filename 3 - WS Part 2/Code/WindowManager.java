@@ -2,7 +2,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WindowManager  {
+public class WindowManager{
 
     private List<SimpleWindow> listWindows;
     private WindowSystem windowSystem;
@@ -22,17 +22,25 @@ public class WindowManager  {
     private final int margin = 5;
     private final int titleTextMarginY = 15;
 
-    private final int utilityButtonHeight = titleBarHeight - 2*margin;
+    private final int utilityButtonHeight = titleBarHeight;
     private final int utilityButtonWidth = 15;
 
     private final String closeButtonText = "x";
 
     public WindowManager(WindowSystem windowSystem) {
         this.windowSystem = windowSystem;
-        listWindows = windowSystem.getListWindows();
-        
-        for (SimpleWindow t:listWindows) {
+    }
 
+    public void redrawAllWindows(){
+            listWindows = windowSystem.getListWindows();
+
+            for (SimpleWindow t:listWindows) {
+                redrawWindow(t);
+            }
+    }
+
+    public void redrawWindow(SimpleWindow t){
+            
             t.setColor(windowColor);
             t.setBorderColor(borderColor);
 
@@ -61,19 +69,21 @@ public class WindowManager  {
             t.addNewComponent(titleString);
 
             //add close button
-            int closeButtonStartX = titleBarLeftX + titleBarWidth - margin - utilityButtonWidth;
-            int closeButtonStartY = titleBarLeftY + margin;
+            int closeButtonStartX = titleBarLeftX + titleBarWidth - utilityButtonWidth;
+            int closeButtonStartY = titleBarLeftY;
             RectangleComponent closeButton = new RectangleComponent(closeButtonStartX, closeButtonStartY, utilityButtonWidth, 
                 utilityButtonHeight, exitButtonColor, false);
             t.addNewComponent(closeButton);
 
             //add close button icon
             StringComponent closeButtonString = new StringComponent(closeButtonText, closeButtonStartX + margin, 
-                closeButtonStartY + margin + 3, titleBarColor);
+                closeButtonStartY + 2*margin, titleBarColor);
             t.addNewComponent(closeButtonString);
 
             windowSystem.requestRepaint(titleBarLeftX-1, titleBarLeftY-1, t.getWidth() + 2, t.getHeight() + titleBarHeight + 2);
-        }
+    }
 
+    public void handleMouseClicked(int x, int y){
+        System.out.println("Window manager - Mouse clicked with x " + x + " and y " + y);
     }
 }
