@@ -123,6 +123,8 @@ public class WindowSystem extends GraphicsEventSystem{
     @Override
     public void handleMouseClicked(int x, int y){
         System.out.println("Mouse clicked with x " + x + " and y " + y);
-        windowManager.handleMouseClicked(x, y);
+        if(windowManager != null){
+            windowManager.handleMouseClicked(x, y);
+        }
     }
 }
