@@ -26,7 +26,7 @@ public class MyApp{
         windowSystem.addNewWindow(babelFishWindow);
 
         SimpleWindow calculatorWindow = new SimpleWindow(0.2f, 0.1f, 270, 310, "The Googleplex Star Thinker");
-        Ratulator ratulator = new Ratulator(calculatorWindow, windowSystem);
+        TheGoogleplexStarThinker ratulator = new TheGoogleplexStarThinker(calculatorWindow, windowSystem);
         calculatorWindow.setWidget(ratulator);
         windowSystem.addNewWindow(calculatorWindow);
     }

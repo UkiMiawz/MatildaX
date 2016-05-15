@@ -12,7 +12,7 @@ public class ExpertApp{
 
         //create new simple window & set widget
         SimpleWindow newWindow = new SimpleWindow(0.2f, 0.1f, 270, 310, "The Googleplex Star Thinker");
-        Ratulator widget = new Ratulator(newWindow, windowSystem);
+        TheGoogleplexStarThinker widget = new TheGoogleplexStarThinker(newWindow, windowSystem);
         newWindow.setWidget(widget);
         windowSystem.addNewWindow(newWindow);
     }

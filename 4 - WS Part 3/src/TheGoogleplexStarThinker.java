@@ -2,7 +2,7 @@ import java.awt.Color;
 /*
 * Widget for Simple calculator
 */
-public class Ratulator extends RATWidget {
+public class TheGoogleplexStarThinker extends RATWidget {
 
 	private String numberString = "0";
     private double savedCalculation = 0.0;
@@ -32,7 +32,7 @@ public class Ratulator extends RATWidget {
 	private String operators[] = {"/", "*", "-", "+"};
 	private String specials[] = {"0", "."};
 
-	public Ratulator(SimpleWindow parentWindow, WindowSystem windowSystem){
+	public TheGoogleplexStarThinker(SimpleWindow parentWindow, WindowSystem windowSystem){
     	//super constructor
     	super(parentWindow, windowSystem);
 
